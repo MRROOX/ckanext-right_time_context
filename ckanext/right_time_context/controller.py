@@ -44,13 +44,13 @@ class ProxyNGSIController(base.BaseController):
 
         if parsed_url.path.lower().find('/v1/querycontext') != -1:
             if resource.get("payload", "").strip() == "":
-                details = 'Please add a payload to complete the query.'
+                details = 'Por favor, añada una carga útil para completar la consulta.'
                 base.abort(409, detail=details)
 
             try:
                 json.loads(resource['payload'])
             except json.JSONDecodeError:
-                details = "Payload field doesn't contain valid JSON data."
+                details = "El campo Payload no contiene datos JSON válidos."
                 base.abort(409, detail=details)
 
             headers['Content-Type'] = "application/json"
@@ -100,7 +100,7 @@ class ProxyNGSIController(base.BaseController):
                 parsed_exp = exp.split('=')
 
                 if len(parsed_exp) != 2 or not parsed_exp[0] in supported_expressions:
-                    base.abort(422, detail='The expression is not a valid one for NGSI Registration, only georel, geometry, and coords is supported')
+                    base.abort(422, detail='La expresión no es válida para el Registro NGSI, sólo se admite georel, geometría y coords')
                 else:
                     expression[parsed_exp[0]] = parsed_exp[1]
 
@@ -175,23 +175,23 @@ class ProxyNGSIController(base.BaseController):
                 r = self._proxy_query_resource(resource, parsed_url, headers, verify=verify)
 
         except requests.HTTPError:
-            details = 'Could not proxy ngsi_resource. We are working to resolve this issue as quickly as possible'
+            details = 'No se ha podido realizar el proxy de ngsi_resource. Estamos trabajando para resolver este problema lo antes posible'
             base.abort(409, detail=details)
         except requests.ConnectionError:
-            details = 'Could not proxy ngsi_resource because a connection error occurred.'
+            details = 'No se ha podido realizar el proxy de ngsi_resource porque se ha producido un error de conexión.'
             base.abort(502, detail=details)
         except requests.Timeout:
-            details = 'Could not proxy ngsi_resource because the connection timed out.'
+            details = 'No se ha podido realizar el proxy de ngsi_resource porque la conexión ha expirado.'
             base.abort(504, detail=details)
 
         if r.status_code == 401:
             if resource.get('auth_type', 'none') != 'none':
-                details = 'ERROR 401 token expired. Retrieving new token, reload please.'
+                details = 'ERROR 401 token expirado. Recuperando nuevo token, recargue por favor.'
                 log.info(details)
                 toolkit.c.usertoken_refresh()
                 base.abort(409, detail=details)
             elif resource.get('auth_type', 'none') == 'none':
-                details = 'Authentication requested by server, please check resource configuration.'
+                details = 'Autenticación solicitada por el servidor, por favor, compruebe la configuración de los recursos.'
                 log.info(details)
                 base.abort(409, detail=details)
 

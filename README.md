@@ -9,6 +9,8 @@ CKAN extension that will give you the ability to manage right-time resources pro
 **Note**: This extension is being tested using CKAN 2.5, 2.6, 2.7 and 2.8. These are
 therefore considered as the supported versions
 
+**Note**: In this version, the notification messages have been translated exclusively into Spanish.
+
 
 ## Requirements
 
